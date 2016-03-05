@@ -98,20 +98,7 @@ input.readonly{
 <div id="main" style="width:816px; margin:0 auto;">
 <h1><img src="spokecalc.png" title="sporkcalc" /></h1>
 
-<div class="adsense">
-<!-- google banner start -->
-<script type="text/javascript"><!--
-google_ad_client = "pub-8442822736587051";
-//728x90, 作成済み 07/12/24
-google_ad_slot = "7422131330";
-google_ad_width = 728;
-google_ad_height = 90;
-//--></script>
-<script type="text/javascript"
-src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
-<!-- google banner end -->
-</div>
+
 
 
 <form id="mainform">
@@ -324,7 +311,7 @@ var ctrl = {
 		this.params.erd = 	parseInt($F("erd") || 0);	//リムERD（有効半径）
 		this.params.rim_hole_num = parseInt($F("rh") || 0);	//リム穴数
 		this.params.hub_hole_num = parseInt($F("hh") || 0);		//ハブ穴数
-		this.params.spoke_hole_pi = parseInt($F("sh") || 0);		//スポーク穴直径
+		this.params.spoke_hole_pi = parseInt($F("sh") || 2.5);		//スポーク穴直径
 		
 		//left
 		this.params.left.pcd = parseInt($F("pcd_l") || 0);	//ハブ穴PCD
@@ -511,7 +498,8 @@ var ctrl = {
 				var temp = "";
 				temp += side.name + " rim side deg : " + A + "<br />";
 				temp += side.name + " hub flange side deg : " + B + "<br />";
-				$("log").innerHTML += temp;
+			//	$("log").innerHTML += temp;
+				console.log(temp);
 			}
 			//ラジアルの場合は0度
 			else{
@@ -519,7 +507,8 @@ var ctrl = {
 				var temp = "";
 				temp += side.name + " rim side deg : 0(radial)<br />";
 				temp += side.name + " hub flange side deg : 0(radial)<br />";
-				$("log").innerHTML += temp;
+			//	$("log").innerHTML += temp;
+				console.log(temp);
 			}
 		});
 		
@@ -569,31 +558,33 @@ var ctrl = {
 		params.left.hub_hole_array.each(function(deg){
 			temp += (deg + " | ");
 		});
-		$("log").innerHTML += temp;
-		$("log").innerHTML += "<br />";
+	//	$("log").innerHTML += temp;
+	//	$("log").innerHTML += "<br />";
+		console.log(temp);
 		
 		var temp = "Right hub flange holes:";
 		params.right.hub_hole_array.each(function(deg){
 			temp += (deg + " | ");
 		});
-		$("log").innerHTML += temp;
-		$("log").innerHTML += "<br />";
+	//	$("log").innerHTML += temp;
+	//	$("log").innerHTML += "<br />";
+		console.log(temp);
 		
 		var temp = "Rim holes:";
 		params.rim_hole_array.each(function(deg){
 			temp += (deg + " | ");
 		});
-		$("log").innerHTML += temp;
-		$("log").innerHTML += "<br />";
+	//	$("log").innerHTML += temp;
+	//	$("log").innerHTML += "<br />";
+		console.log(temp);
 		
-	
 		var temp = "Rim hole availables:";
 		for (var i in params.rim_hole_available){
 			temp += (i + " | ");
 		}
-		$("log").innerHTML += temp;
-		$("log").innerHTML += "<br />";
-	
+	//	$("log").innerHTML += temp;
+	//	$("log").innerHTML += "<br />";
+		console.log(temp);
 		
 		//フォームの内容を更新
 		this.writeForm();
@@ -664,20 +655,20 @@ var ctrl = {
 		
 		//正しいリム穴と結びつくハブ穴の初期位置を出す
 		var start = 0;
-		$("log").innerHTML += side.name + "checking...<br />";
+		console.log(side.name + "checking...");
 		for(var i = 0; i < side.hub_hole_array.length; i++){
 			var rimholedeg = this.within(side.hub_hole_array[i] + side.spoke_deg, 360);
-			$("log").innerHTML += "&nbsp;from hub:" + side.hub_hole_array[i] + " to rim:" + rimholedeg;
+			console.log("&nbsp;from hub:" + side.hub_hole_array[i] + " to rim:" + rimholedeg);
 			
 			
 			if(params.rim_hole_available[rimholedeg] != undefined){
 				start = i;
-				$("log").innerHTML += " ... ok<br/>";
-				$("log").innerHTML += side.name + " Start Hub Hole: " + start + "(" + side.hub_hole_array[start] + ")<br />";
+				console.log(" ... ok<br/>");
+				console.log(side.name + " Start Hub Hole: " + start + "(" + side.hub_hole_array[start] + ")");
 				break;
 			}
 			else{
-				$("log").innerHTML += " ... ng<br />";
+				console.log(" ... ng");
 			}
 		}
 				
@@ -690,7 +681,7 @@ var ctrl = {
 		for(var i = 0, pos = start; i < side.spoke_num / 2; i++, pos += skip){
 			var hubholedeg = side.hub_hole_array[this.within(pos, side.hub_hole_array.length)];
 			var rimholedeg = this.within(hubholedeg + side.spoke_deg, 360);
-			if(params.rim_hole_available[rimholedeg] != undefined){
+		//	if(params.rim_hole_available[rimholedeg] != undefined){
 				var x1 = hr * Math.cos(hubholedeg / 180 * Math.PI);
 				var y1 = hr * Math.sin(hubholedeg / 180 * Math.PI);
 				var x2 = rr * Math.cos(rimholedeg / 180 * Math.PI);
@@ -705,16 +696,16 @@ var ctrl = {
 				spoke.setAttribute('stroke', side.color1);
 				spoke.setAttribute('stroke-width', '2');
 				a1.appendChild(spoke);
-			}
-			else{
-				err.push("LEFT: rimhole "+rimholedeg+" is not found\n");
-			}
+		//	}
+		//	else{
+		//		err.push("LEFT: rimhole "+rimholedeg+" is not found\n");
+		//	}
 		}
 		//次に手前側のスポークを描画
 		for(var i = 0, pos = start + pitch; i < side.spoke_num / 2; i++, pos += skip){
 			var hubholedeg = side.hub_hole_array[this.within(pos, side.hub_hole_array.length)];
 			var rimholedeg = this.within(hubholedeg - side.spoke_deg, 360);
-			if(params.rim_hole_available[rimholedeg] != undefined){
+		//	if(params.rim_hole_available[rimholedeg] != undefined){
 				var x1 = hr * Math.cos(hubholedeg / 180 * Math.PI);
 				var y1 = hr * Math.sin(hubholedeg / 180 * Math.PI);
 				var x2 = rr * Math.cos(rimholedeg / 180 * Math.PI);
@@ -729,10 +720,10 @@ var ctrl = {
 				spoke.setAttribute('stroke', side.color2);
 				spoke.setAttribute('stroke-width', '2');
 				a2.appendChild(spoke);
-			}
-			else{
-				err.push("RIGHT: rimhole "+rimholedeg+" is not found\n");
-			}
+		//	}
+		//	else{
+		//		err.push("RIGHT: rimhole "+rimholedeg+" is not found\n");
+		//	}
 		}
 		
 		//test
@@ -749,7 +740,7 @@ var ctrl = {
 		}
 		
 		if(err.length > 0){
-			alert(err);
+			console.log(err);
 		}
 		return {
 			backspokes : a1,
@@ -941,949 +932,3 @@ Event.observe(window, "load", function(){
 
 
 </html>
-
-=======
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html lang="ja">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="description" content="スポーク長を計算。設定に従ってホイールの仮想イメージをSVGで描画。変則的な組み方にも対応。" />
-<meta name="keywords" content="ホイール,スポーク,自転車,ホイール組み,スポーク長,計算,spokes,rim,hub,wheel,bike,bicycle,cycle" />
-<title>spokecalc スポーク長の計算とホイールイメージ</title>
-
-<style type="text/css">
-body{
-	font-size:9pt;
-}
-
-.adsense{
-	text-align:center;
-}
-
-
-table{
-	border:none;
-	margin:0;
-	padding:0;
-}
-tr{
-	margin:0;
-	padding:0;
-}
-td{
-	margin:0;
-	padding:0;
-}
-
-.parttitle{
-	font-weight:bold;
-}
-
-
-
-h3{
-	color: #555;
-	margin:0.5em 0 0.2em 0;
-	paddng:0 0 0.3em 0;
-	border-bottom: solid 1px #fff;
-}
-
-
-td.lr{
-	text-align:right;
-}
-
-input{
-	line-height:1em;
-}
-
-input.text{
-	width:4em;
-}
-
-input.readonly{
-	background:#eee;
-}
-
-
-#footer{
-	border: solid 1px #999;
-	border-width:1px 0 0 0;
-	color:#999;
-	font-size:9pt;
-	text-align:right;
-	margin:2em 0 8em 0;
-	padding:1em 0 0 0;
-}
-</style>
-
-
-
-
-<style type="text/css">
-
-</style>
-
-
-<head>
-
-
-</head>
-
-<body>
-
-
-
-
-
-
-
-
-
-<div id="main" style="width:816px; margin:0 auto;">
-<h1><img src="spokecalc.png" title="sporkcalc" /></h1>
-
-<div class="adsense">
-<!-- google banner start -->
-<script type="text/javascript"><!--
-google_ad_client = "pub-8442822736587051";
-//728x90, 作成済み 07/12/24
-google_ad_slot = "7422131330";
-google_ad_width = 728;
-google_ad_height = 90;
-//--></script>
-<script type="text/javascript"
-src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
-<!-- google banner end -->
-</div>
-
-
-<form id="mainform">
-
-
-<div>
-<div style="overflow:hidden; height:1px; background:#ddf; margin:0 4px;"></div>
-<div style="overflow:hidden; height:1px; background:#ddf; margin:0 2px;"></div>
-<div style="overflow:hidden; height:1px; background:#ddf; margin:0 1px;"></div>
-<div style="background:#ddf; margin:0; padding:8px;">
-
-
-<div id="svgcase" style="width:400px; height:400px; border:none 1px #fff; float:right;"></div>
-
-<table style="width:380px; border:none 1px #fff; float:left;"><tbody>
-<tr><td colspan="5" class="parttitle"><h3>リム</h3></td></tr>
-<tr><td>ERD</td><td></td><td><input class="text" type="text" id="erd" name="erd" />mm</td></tr>
-<tr><td>穴数</td><td></td><td><input class="text" type="text" id="rh" name="rh" />穴</td></tr>
-
-<tr><td colspan="5" class="parttitle"><h3>ハブ</h3></td></tr>
-<tr><td>穴数</td><td></td><td><input class="text" type="text" id="hh" name="hh" />穴</td></tr>
-<tr><td>スポーク穴直径</td><td></td><td><input class="text" type="text" id="sh" name="sh" />mm</td></tr>
-<tr><td>スポーク穴PCD</td>
-	<td class="lr"><strong>左:</strong></td><td><input class="text" type="text" id="pcd_l" name="pcd_l" />mm</td>
-	<td class="lr"><strong>右:</strong></td><td><input class="text" type="text" id="pcd_r" name="pcd_r" />mm</td>
-</tr>
-<tr><td>フランジ距離</td>
-	<td class="lr"><strong>左:</strong></td><td><input class="text" type="text" id="fd_l" name="fd_l" />mm</td>
-	<td class="lr"><strong>右:</strong></td><td><input class="text" type="text" id="fd_r" name="fd_r" />mm</td>
-</tr>
-
-<tr><td colspan="5" class="parttitle"><h3>スポーク＆組み方</h3></td></tr>
-<tr><td>スポーク本数</td>
-	<td class="lr"><strong>左:</strong></td><td><input class="text" type="text" id="sn_l" name="sn_l" />本</td>
-	<td class="lr"><strong>右:</strong></td><td><input class="text" type="text" id="sn_r" name="sn_r" />本</td>
-</tr>
-
-<tr><td>スポーク交差数</td>
-	<td class="lr"><strong>左:</strong></td><td><select class="text" id="c_l" name="c_l"><option value="0">ラジアル</option><option value="1">1クロス</option><option value="2">2クロス</option><option value="3">3クロス</option><option value="4">4クロス</option><option value="5">5クロス</option></select></td>
-	<td class="lr"><strong>右:</strong></td><td><select class="text" id="c_r" name="c_r"><option value="0">ラジアル</option><option value="1">1クロス</option><option value="2">2クロス</option><option value="3">3クロス</option><option value="4">4クロス</option><option value="5">5クロス</option></select></td>
-</tr>
-
-<tr><td>リム側穴ピッチ</td>
-	<td class="lr"><strong>左:</strong></td><td><select class="text" type="text" id="rim_pitch_l" name="rim_pitch_l"><option value="2">中1穴(標準)</option></select></td>
-	<td class="lr"><strong>右:</strong></td><td><select class="text" type="text" id="rim_pitch_r" name="rim_pitch_r"><option value="2">中1穴(標準)</option></select></td>
-</tr>
-
-<tr><td>ハブフランジ側穴ピッチ</td>
-	<td class="lr"><strong>左:</strong></td><td><select class="text" id="hub_pitch_l" name="hub_pitch_l"><option value="1">中0穴(2本取り)</option><option value="3">中2穴(4本取り)</option><option value="5">中4穴(6本取り)</option></select></td>
-	<td class="lr"><strong>右:</strong></td><td><select class="text" id="hub_pitch_r" name="hub_pitch_r"><option value="1">中0穴(2本取り)</option><option value="3">中2穴(4本取り)</option><option value="5">中4穴(6本取り)</option></select></td>
-</tr>
-
-<tr><td>スポーク角度</td>
-	<td class="lr"><strong>左:</strong></td><td><input readonly="readonly" class="text readonly" type="text" id="t_l" name="t_l" />度</td>
-	<td class="lr"><strong>右:</strong></td><td><input readonly="readonly" class="text readonly" type="text" id="t_r" name="t_r" />度</td>
-</tr>
-
-<tr><td colspan="5" class="parttitle"><h3>結果</h3></td></tr>
-<tr><td>スポーク長さ</td>
-	<td class="lr"><strong>左:</strong><td><input readonly="readonly" class="text readonly" type="text" id="sl_l" name="sl_l" />mm</td>
-	<td class="lr"><strong>右:</strong><td><input readonly="readonly" class="text readonly" type="text" id="sl_r" name="sl_r" />mm</td>
-</tr>
-
-<tr><td colspan="5"><input type="button" id="update" name="update" value="update" /></td></tr>
-
-
-</tbody></table>
-
-
-
-
-<div style="clear:both;"></div>
-
-
-</div>
-<div style="overflow:hidden; height:1px; background:#ddf; margin:0 1px;"></div>
-<div style="overflow:hidden; height:1px; background:#ddf; margin:0 2px;"></div>
-<div style="overflow:hidden; height:1px; background:#ddf; margin:0 4px;"></div>
-
-</div>
-</form>
-
-
-<div id="log" style="display:;">
-</div>
-
-<h2>使い方のヒント</h2>
-<ul>
-<li>どの穴からどの穴へスポークが張られるか、はリム側の穴の数、ハブ側の穴の数、およびスポーク交差数を元に決められます。</li>
-<li>「24穴のリムと、32Hのハブを使って、フリー側2cross16本、反フリー側ラジアル8本」といった変態的な組み方であっても、均等にハブ穴およびリム穴を使うことができる限り、問題なく組むことができます。<ul><li>逆にスポーク数が7本、とか均等にテンションが掛けられないものは不可です。</li></ul></li>
-<li>上記例だと、リム穴数を24穴、ハブ穴数を32穴、左側スポーク数16本／交差数2クロス／リム側穴ピッチ中0穴、右側スポーク数8本／交差数ラジアルと指定すれば求められます。スポーク角度が正しく左41.25度／右0度となるのが分かります。
-</ul>
-
-<h2>その他</h2>
-<ul>
-<li>ホイールイメージの描画にはSVGを使ってます。ので未対応ブラウザの人はすいません。これを機会にFirefoxとかGoogle Chromeとかにしましょう。</li>
-<li>お約束として、当サイトを利用した結果生じた如何なる損害についても当方は責任を負いかねますのでご了承頂ける方のみご利用ください。
-</ul>
-
-
-
-</div><!-- main -->
-
-
-<div id="footer">
-copyright (c) infofreako.com
-</div>
-
-
-</body>
-
-<script type="text/javascript" src="prototype.js"></script>
-<script type="text/javascript">
-
-var SVG = {
-	namespace : 'http://www.w3.org/2000/svg',
-	version : '1.1'
-}
-
-var ctrl = {
-	within : function(n, limit){
-		n = n % limit;
-		if (n < 0) n = limit + n;
-		return n;
-	},
-	
-	//-------------------------------------------------------------------------
-	//パラメータ
-	params : {
-		//rim global
-		erd : 0,
-		rim_hole_num : 0,
-		//rim穴の配列
-		rim_hole_array : [],
-		//rim穴の存在確認ハッシュ
-		rim_hole_available : {},
-		
-		//hub global
-		hub_hole_num : 0,
-		hub_hole_num_half : 0,
-		spoke_hole_pi : 0,
-		
-		//left
-		left : {
-			name : "Left",
-			color1 : "#aaf",
-			color2 : "#77c",
-			ext : "_l",
-			pcd : 0,
-			flange_center : 0,
-			spoke_num : 0,
-			cross : 0,
-			
-			//リム側ハブ側それぞれの穴の間隔
-			rim_pitch : 0,
-			hub_pitch : 0,
-			rim_pitch_options : [],//select option用
-			hub_pitch_options : [],
-			
-			//単位スポーク（クロスの片側）のハブ側＆リム側ピッチ（穴いくつ毎に1本単位スポークが通るか）
-			//この値が整数にならない場合、ホイールは成立しない
-			unit_spoke_rimside_pitch : 0,
-			unit_spoke_hubside_pitch : 0,
-			//スポーク角度
-			spoke_deg : 0,
-			//スポーク長さ
-			spoke_length : 0,
-			
-			//ハブ穴の配列
-			hub_hole_array : []
-		},
-		
-		//right
-		right : {
-			name : "Right",
-			color1 : "#faa",
-			color2 : "#c77",
-			ext : "_r",
-			pcd : 0,
-			flange_center : 0,
-			spoke_num : 0,
-			cross : 0,
-			
-			//リム側ハブ側それぞれの穴の間隔
-			rim_pitch : 0,
-			hub_pitch : 0,
-			rim_pitch_options : [],//select option用
-			hub_pitch_options : [],
-			
-			//単位スポーク（クロスの片側）のハブ側＆リム側ピッチ（穴いくつ毎に1本単位スポークが通るか）
-			//この値が整数にならない場合、ホイールは成立しない
-			unit_spoke_rimside_pitch : 0,
-			unit_spoke_hubside_pitch : 0,
-			//スポーク角度
-			spoke_deg : 0,
-			//スポーク長さ
-			spoke_length : 0,
-			
-			//ハブ穴の配列
-			hub_hole_array : []
-		},
-		
-		dammy : "dammy"
-	},
-	
-	
-	//-------------------------------------------------------------------------
-	//フォームを元にパラメータアップデート
-	readForm : function(){
-		this.params.erd = 	parseInt($F("erd") || 0);	//リムERD（有効半径）
-		this.params.rim_hole_num = parseInt($F("rh") || 0);	//リム穴数
-		this.params.hub_hole_num = parseInt($F("hh") || 0);		//ハブ穴数
-		this.params.spoke_hole_pi = parseInt($F("sh") || 0);		//スポーク穴直径
-		
-		//left
-		this.params.left.pcd = parseInt($F("pcd_l") || 0);	//ハブ穴PCD
-		this.params.left.flange_center = parseInt($F("fd_l") || 0);	//ハブ中心－フランジ中心距離
-		this.params.left.spoke_num = parseInt($F("sn_l") || 0);	//スポーク本数
-		this.params.left.cross = 	parseInt($F("c_l") || 0);	//スポーク交差数
-		this.params.left.rim_pitch = 	parseInt($F("rim_pitch_l") || 0);	//リム側穴ピッチ
-		this.params.left.hub_pitch = 	parseInt($F("hub_pitch_l") || 0);	//ハブフランジ側穴ピッチ
-		
-		//right
-		this.params.right.pcd = parseInt($F("pcd_r") || 0);	//ハブ穴PCD
-		this.params.right.flange_center = parseInt($F("fd_r") || 0);	//ハブ中心－フランジ中心距離
-		this.params.right.spoke_num = 	parseInt($F("sn_r") || 0);	//スポーク本数
-		this.params.right.cross = 	parseInt($F("c_r") || 0);	//スポーク交差数
-		this.params.right.rim_pitch = 	parseInt($F("rim_pitch_r") || 0);	//リム側穴ピッチ
-		this.params.right.hub_pitch = 	parseInt($F("hub_pitch_r") || 0);	//ハブフランジ側穴ピッチ
-		
-		return this.params;
-	},
-	
-	
-	
-	//-------------------------------------------------------------------------
-	//フォームに書き戻し
-	writeForm : function(){
-		$("rh").value = parseInt(this.params.rim_hole_num);
-		$("hh").value = this.params.hub_hole_num;
-		
-		var lr = $A([this.params.left, this.params.right]);
-		
-		lr.each(function(side){
-			//rim_pitch
-			var rimpitch = $("rim_pitch" + side.ext);
-			rimpitch.disabled = side.rim_pitch_options.disabled;
-			rimpitch.length = side.rim_pitch_options.length;
-			for(var i = 0; i < side.rim_pitch_options.length; i++){
-				rimpitch.options[i].value = side.rim_pitch_options[i].value;
-				rimpitch.options[i].text = side.rim_pitch_options[i].text;
-				if(side.rim_pitch_options[i].value == side.rim_pitch) rimpitch.selectedIndex = i;
-			}
-			
-			//hub_pitch
-			var hubpitch = $("hub_pitch" + side.ext);
-			hubpitch.disabled = side.hub_pitch_options.disabled;
-			hubpitch.length = side.hub_pitch_options.length;
-			for(var i = 0; i < side.hub_pitch_options.length; i++){
-				hubpitch.options[i].value = side.hub_pitch_options[i].value;
-				hubpitch.options[i].text = side.hub_pitch_options[i].text;
-				if(side.hub_pitch_options[i].value == side.hub_pitch) hubpitch.selectedIndex = i;
-			}
-			
-			//spokenum
-			$("sn" + side.ext).value = side.spoke_num;
-			
-			//spokedeg
-			$("t" + side.ext).value = side.spoke_deg;
-			
-			//spokelength
-			$("sl" + side.ext).value = side.spoke_length;
-		});
-	},
-	
-	
-	
-	//-------------------------------------------------------------------------
-	//パラメータが変更された場合のハンドラ
-	paramChanged : function(){
-		$("log").innerHTML = "";
-
-		var params = this.readForm();	// = this.params
-		
-		//リム穴数またはハブ穴数がセットされた場合、スポーク本数などにデフォルト値をセット
-		if(params.rim_hole_num && !params.hub_hole_num){
-			if(!params.hub_hole_num) params.hub_hole_num = params.rim_hole_num;
-			if(!params.left.spoke_num) params.left.spoke_num = parseInt(params.rim_hole_num / 2);
-			if(!params.right.spoke_num) params.right.spoke_num = parseInt(params.rim_hole_num / 2);
-		}
-		else if(params.hub_hole_num && !params.rim_hole_num){
-			if(!params.rim_hole_num) params.rim_hole_num = params.hub_hole_num;
-			if(!params.left.spoke_num) params.left.spoke_num = parseInt(params.hub_hole_num / 2);
-			if(!params.right.spoke_num) params.right.spoke_num = parseInt(params.hub_hole_num / 2);
-		}
-		
-		
-		//片方のフランジ分のハブ穴数
-		params.hub_hole_num_half = params.hub_hole_num / 2;
-		
-		
-		//単位スポーク（クロスの片側）のハブ側＆リム側ピッチ（穴いくつ毎に1本単位スポークが通るか）
-		//この値が整数にならない場合、ホイールは成立しない
-		if(params.hub_hole_num_half){
-			if(params.left.spoke_num){
-				params.left.unit_spoke_hubside_pitch = params.hub_hole_num_half / params.left.spoke_num * 2;
-			}
-			if(params.right.spoke_num){
-				params.right.unit_spoke_hubside_pitch = params.hub_hole_num_half / params.right.spoke_num * 2;
-			}
-		}
-		if(params.rim_hole_num){
-			if(params.left.spoke_num){
-				params.left.unit_spoke_rimside_pitch = params.rim_hole_num / params.left.spoke_num * 2;
-			}
-			if(params.right.spoke_num){
-				params.right.unit_spoke_rimside_pitch = params.rim_hole_num / params.right.spoke_num * 2;
-			}
-		}
-		
-		
-		var lr = $A([params.left, params.right]);
-		
-		//リム側およびハブ側のピッチ数
-		lr.each(function(side){
-			//リム側ピッチ選択肢の構築
-			side.rim_pitch_options.clear();//オプションを一旦初期化
-			side.rim_pitch_options.selectedIndex = undefined;//selectedもクリア
-			//非ラジアルおよびピッチが正しく整数の場合
-			if(side.cross > 0 && side.unit_spoke_rimside_pitch == parseInt(side.unit_spoke_rimside_pitch)){
-				side.rim_pitch_options.disabled = "";
-				for(var i = 0; i < side.unit_spoke_rimside_pitch - 1; i++){
-					var txt = '中' + i + '穴';
-					var value = i + 1;
-					if(i == 1) txt += '(標準)';
-					if(value == side.rim_pitch) side.rim_pitch_options.selectedIndex = i;
-					side.rim_pitch_options[i] = {};
-					side.rim_pitch_options[i].value = value;
-					side.rim_pitch_options[i].text = txt;
-				}
-				//リムピッチが未選択の場合、i=1の標準を値とする
-				if(side.rim_pitch_options.selectedIndex == undefined){
-					side.rim_pitch_options.selectedIndex = 1;
-					side.rim_pitch = side.rim_pitch_options[1].value
-				}
-			}
-			//ラジアル組みの場合はリムピッチもハブピッチも不要なので無効化
-			else{
-				side.rim_pitch_options.disabled = "disabled";
-				side.rim_pitch_options[0] = {};
-				side.rim_pitch_options[0].value = 0;
-				side.rim_pitch_options[0].text = '----';
-			}
-			
-			//ハブ側ピッチ選択肢の構築
-			side.hub_pitch_options.clear();//オプションを一旦初期化
-			side.hub_pitch_options.selectedIndex = undefined;//selectedもクリア
-			//非ラジアルおよびピッチが正しく整数の場合
-			if(side.cross > 0 && side.unit_spoke_hubside_pitch == parseInt(side.unit_spoke_hubside_pitch)){
-				side.hub_pitch_options.disabled = "";
-				var geta = side.unit_spoke_hubside_pitch * (side.cross - 1);//ゲタ
-				for(var i = 0; i < side.unit_spoke_hubside_pitch - 1; i++){
-					var txt = '中' + (i + geta) + '穴';
-					var value = i + geta + 1;
-					if(i == 0) txt += '(標準)';
-					if(value == side.hub_pitch) side.hub_pitch_options.selectedIndex = i;
-					side.hub_pitch_options[i] = {};
-					side.hub_pitch_options[i].value = value;
-					side.hub_pitch_options[i].text = txt;
-				}
-				//ハブピッチが未選択の場合、i=0の標準を値とする
-				if(!side.hub_pitch_options.selectedIndex){
-					side.hub_pitch_options.selectedIndex = 0;
-					side.hub_pitch = side.hub_pitch_options[0].value
-				}
-			}
-			//ラジアル組みの場合はリムピッチもハブピッチも不要なので無効化
-			else{
-				side.hub_pitch_options.disabled = "disabled";
-				side.hub_pitch_options[0] = {};
-				side.hub_pitch_options[0].value = 0;
-				side.hub_pitch_options[0].text = '----';
-			}
-		});
-		
-		//スポーク角度を計算
-		lr.each(function(side){
-			if(side.cross > 0){
-				//リム側の穴間角度
-				var A = (360 / params.rim_hole_num) * side.rim_pitch;
-				//ハブ側の穴間角度
-				var B = (360 / (params.hub_hole_num / 2)) * side.hub_pitch;
-				//スポーク角度
-				var T = (A + B) / 2;
-				side.spoke_deg = T;
-				
-				var temp = "";
-				temp += side.name + " rim side deg : " + A + "<br />";
-				temp += side.name + " hub flange side deg : " + B + "<br />";
-				$("log").innerHTML += temp;
-			}
-			//ラジアルの場合は0度
-			else{
-				side.spoke_deg = 0;
-				var temp = "";
-				temp += side.name + " rim side deg : 0(radial)<br />";
-				temp += side.name + " hub flange side deg : 0(radial)<br />";
-				$("log").innerHTML += temp;
-			}
-		});
-		
-		//スポーク長を計算
-		lr.each(function(side){
-			if(side.pcd && params.erd && side.flange_center && params.spoke_hole_pi){
-				var hr = side.pcd / 2;	//ハブ半径
-				var rr = params.erd / 2;	//リム半径
-				
-				var x = hr * Math.sin(side.spoke_deg / 180 * Math.PI);
-				var y = rr - (hr * Math.cos(side.spoke_deg / 180 * Math.PI));
-				var z = side.flange_center;
-				
-				//スポーク長
-				side.spoke_length = parseInt((Math.sqrt(x*x + y*y + z*z) - params.spoke_hole_pi / 2) * 100) / 100;
-			}
-		});
-		
-		//リムとハブの相対位置、および穴角度を計算
-		//まず左側
-	//	var left_hub_deg = (360 / (params.hub_hole_num / 2)) * ((params.hub_hole_num / 2) / (params.left.spoke_num / 2));
-		var hub_deg = 360 / (params.hub_hole_num / 2);
-		var left_hub_offset = hub_deg * params.left.hub_pitch / -2;
-		params.left.hub_hole_array = [];
-		for(var i = 0, d = left_hub_offset; i < (params.hub_hole_num / 2); i++, d += hub_deg){
-			params.left.hub_hole_array[i] = this.within(d, 360);
-		}
-		//右側は左側よりハブ穴間隔の1/2オフセット
-		var right_hub_offset = left_hub_offset + hub_deg / 2;
-		params.right.hub_hole_array = [];
-		for(var i = 0, d = right_hub_offset; i < (params.hub_hole_num / 2); i++, d += hub_deg){
-			params.right.hub_hole_array[i] = this.within(d, 360);
-		}
-		//リム
-		var rim_deg = 360 / params.rim_hole_num;
-		var rim_offset = rim_deg * params.left.rim_pitch / 2;
-		params.rim_hole_array = [];
-		params.rim_hole_available = {};
-		for(var i = 0, d = rim_offset; i < params.rim_hole_num; i++, d += rim_deg){
-			params.rim_hole_array[i] = this.within(d, 360);
-			params.rim_hole_available[this.within(d, 360)] = i;
-		}
-		
-		
-		
-		var temp = "Left hub flange holes:";
-		params.left.hub_hole_array.each(function(deg){
-			temp += (deg + " | ");
-		});
-		$("log").innerHTML += temp;
-		$("log").innerHTML += "<br />";
-		
-		var temp = "Right hub flange holes:";
-		params.right.hub_hole_array.each(function(deg){
-			temp += (deg + " | ");
-		});
-		$("log").innerHTML += temp;
-		$("log").innerHTML += "<br />";
-		
-		var temp = "Rim holes:";
-		params.rim_hole_array.each(function(deg){
-			temp += (deg + " | ");
-		});
-		$("log").innerHTML += temp;
-		$("log").innerHTML += "<br />";
-		
-	
-		var temp = "Rim hole availables:";
-		for (var i in params.rim_hole_available){
-			temp += (i + " | ");
-		}
-		$("log").innerHTML += temp;
-		$("log").innerHTML += "<br />";
-	
-		
-		//フォームの内容を更新
-		this.writeForm();
-		
-		//ホイール表示
-		this.updateWheel('svgcase');
-	},
-	
-	updateWheel : function(svgcase){
-		var erd = this.params.erd;
-		var hn = this.params.hub_hole_num;
-		
-		svgcase = $(svgcase);
-		svgcase.innerHTML = '';
-		
-		var thickness = 25;	//リムの厚み
-		var width = erd + thickness * 2;
-		var topleft = -width / 2;
-		
-		// SVG
-		var svg = document.createElementNS(SVG.namespace, 'svg');
-		svg.setAttribute('width', 400);
-		svg.setAttribute('height', 400);
-		svg.setAttribute('viewBox', topleft + ' ' + topleft + ' ' + width + ' ' + width);
-		svg.setAttribute('xmlns', SVG.namespace);
-		svg.setAttribute('version', SVG.version);
-		
-		//spokes
-	//	var lr = $A([this.params.left]);
-		var lr = $A([this.params.left, this.params.right]);
-		lr.each((function(side){
-			var hub = this.getHub(side.pcd);
-			var spokes = this.getSpokes(this.params, side);
-			svg.appendChild(spokes.backspokes);
-			svg.appendChild(spokes.backspokeheads);
-			svg.appendChild(hub);
-			svg.appendChild(spokes.frontspokes);
-		}).bind(this));
-		
-		
-		//rim
-		if(svg && erd && thickness){
-			var rim = this.getRim(erd, thickness);
-			svg.appendChild(rim);
-		}
-		
-		
-		//表示
-		if(svg){
-			svgcase.appendChild(svg);
-		}
-	},
-	
-	//ラジアルとクロスで分けて描画
-	//【クロス】
-	//スポークをクロスの左側、右側と分けて描画
-	//1)まず左側の基準スポークの位置を確定し、
-	//2)フランジ穴数の1/2をスポーク数の1/2で割ったピッチ、つまりフランジ穴数/スポーク数ごとに、スポーク数の1/2分ループ
-	getSpokes : function(params, side){
-		var rr = params.erd / 2;	//リム半径
-		var hr = side.pcd / 2;	//ハブフランジ半径
-		var ch = side.hn / 2;	//片側分の穴数
-		var a1 = document.createElementNS(SVG.namespace, 'g');;//奥側のスポーク
-		var h1 = document.createElementNS(SVG.namespace, 'g');;//奥側のスポークの頭部分
-		var a2 = document.createElementNS(SVG.namespace, 'g');;//手前側のスポーク
-		
-		var err = [];
-		
-		//正しいリム穴と結びつくハブ穴の初期位置を出す
-		var start = 0;
-		$("log").innerHTML += side.name + "checking...<br />";
-		for(var i = 0; i < side.hub_hole_array.length; i++){
-			var rimholedeg = this.within(side.hub_hole_array[i] + side.spoke_deg, 360);
-			$("log").innerHTML += "&nbsp;from hub:" + side.hub_hole_array[i] + " to rim:" + rimholedeg;
-			
-			
-			if(params.rim_hole_available[rimholedeg] != undefined){
-				start = i;
-				$("log").innerHTML += " ... ok<br/>";
-				$("log").innerHTML += side.name + " Start Hub Hole: " + start + "(" + side.hub_hole_array[start] + ")<br />";
-				break;
-			}
-			else{
-				$("log").innerHTML += " ... ng<br />";
-			}
-		}
-				
-		//まず奥側のスポークを描画
-		//ハブ穴をいくつ置きに使うか。通常0＝ピッチ1
-		var pitch = (params.hub_hole_num / 2) / side.spoke_num;
-		//奥と表を別々に描く上でのスキップ量
-		var skip = pitch * 2;
-		
-		for(var i = 0, pos = start; i < side.spoke_num / 2; i++, pos += skip){
-			var hubholedeg = side.hub_hole_array[this.within(pos, side.hub_hole_array.length)];
-			var rimholedeg = this.within(hubholedeg + side.spoke_deg, 360);
-			if(params.rim_hole_available[rimholedeg] != undefined){
-				var x1 = hr * Math.cos(hubholedeg / 180 * Math.PI);
-				var y1 = hr * Math.sin(hubholedeg / 180 * Math.PI);
-				var x2 = rr * Math.cos(rimholedeg / 180 * Math.PI);
-				var y2 = rr * Math.sin(rimholedeg / 180 * Math.PI);
-				
-				var spoke = document.createElementNS(SVG.namespace, 'line');
-				spoke.setAttribute('x1', x1);
-				spoke.setAttribute('y1', y1);
-				spoke.setAttribute('x2', x2);
-				spoke.setAttribute('y2', y2);
-				spoke.setAttribute('fill', 'none');
-				spoke.setAttribute('stroke', side.color1);
-				spoke.setAttribute('stroke-width', '2');
-				a1.appendChild(spoke);
-			}
-			else{
-				err.push("LEFT: rimhole "+rimholedeg+" is not found\n");
-			}
-		}
-		//次に手前側のスポークを描画
-		for(var i = 0, pos = start + pitch; i < side.spoke_num / 2; i++, pos += skip){
-			var hubholedeg = side.hub_hole_array[this.within(pos, side.hub_hole_array.length)];
-			var rimholedeg = this.within(hubholedeg - side.spoke_deg, 360);
-			if(params.rim_hole_available[rimholedeg] != undefined){
-				var x1 = hr * Math.cos(hubholedeg / 180 * Math.PI);
-				var y1 = hr * Math.sin(hubholedeg / 180 * Math.PI);
-				var x2 = rr * Math.cos(rimholedeg / 180 * Math.PI);
-				var y2 = rr * Math.sin(rimholedeg / 180 * Math.PI);
-				
-				var spoke = document.createElementNS(SVG.namespace, 'line');
-				spoke.setAttribute('x1', x1);
-				spoke.setAttribute('y1', y1);
-				spoke.setAttribute('x2', x2);
-				spoke.setAttribute('y2', y2);
-				spoke.setAttribute('fill', 'none');
-				spoke.setAttribute('stroke', side.color2);
-				spoke.setAttribute('stroke-width', '2');
-				a2.appendChild(spoke);
-			}
-			else{
-				err.push("RIGHT: rimhole "+rimholedeg+" is not found\n");
-			}
-		}
-		
-		//test
-		for(var i = 0; i < side.hub_hole_array.length; i++){
-			var x1 = hr * Math.cos(side.hub_hole_array[i] / 180 * Math.PI);
-			var y1 = hr * Math.sin(side.hub_hole_array[i] / 180 * Math.PI);
-			var spokehead = document.createElementNS(SVG.namespace, 'circle');
-			spokehead.setAttribute('cx', x1);
-			spokehead.setAttribute('cy', y1);
-			spokehead.setAttribute('r', '1.5');
-			spokehead.setAttribute('fill', "#000");
-			spokehead.setAttribute('stroke', 'none');
-			h1.appendChild(spokehead);
-		}
-		
-		if(err.length > 0){
-			alert(err);
-		}
-		return {
-			backspokes : a1,
-			backspokeheads : h1,
-			frontspokes : a2
-		};
-/*
-		
-		var FB;	//表か（1）裏か（-1）
-		var offset;
-		var color;
-		if(LR == 'l'){
-			offset = 0;
-			color = '#aaf';
-			FB = 1;
-		}
-		else{
-			offset = 360 / hn;
-			color = '#faa';
-			FB = 1;
-		}
-		
-		for(var i =0; i < side.spoke_num; i++, FB *= -1){
-			var n1 = i;
-			var n2 = (FB > 0) ? (i + c + ch) % ch : (i - c + ch) % ch;
-			
-			var x1 = hr * Math.cos((360 / ch * n1 + offset) / 180 * Math.PI);
-			var y1 = hr * Math.sin((360 / ch * n1 + offset) / 180 * Math.PI);
-			var x2 = rr * Math.cos((360 / ch * n2 + offset) / 180 * Math.PI);
-			var y2 = rr * Math.sin((360 / ch * n2 + offset) / 180 * Math.PI);
-			
-			var spoke = document.createElementNS(SVG.namespace, 'line');
-			spoke.setAttribute('x1', x1);
-			spoke.setAttribute('y1', y1);
-			spoke.setAttribute('x2', x2);
-			spoke.setAttribute('y2', y2);
-			spoke.setAttribute('fill', 'none');
-			spoke.setAttribute('stroke', color);
-			spoke.setAttribute('stroke-width', '2');
-			
-			if(FB > 0){
-				a1.appendChild(spoke);
-				var spokehead = document.createElementNS(SVG.namespace, 'circle');
-				spokehead.setAttribute('cx', x1);
-				spokehead.setAttribute('cy', y1);
-				spokehead.setAttribute('r', '1.5');
-				spokehead.setAttribute('fill', color);
-				spokehead.setAttribute('stroke', 'none');
-				h1.appendChild(spokehead);
-			}
-			else{
-				a2.appendChild(spoke);
-			}
-		}
-		return {
-			backspokes : a1,
-			backspokeheads : h1,
-			frontspokes : a2
-		};
-*/
-	},
-	
-	//getHub
-	//	@param	pcd	ハブフランジのPCD
-	getHub : function(pcd){
-		var margin = 4.5;	//フランジ穴中心からフランジ端までのマージン
-		var r = pcd / 2 + margin;
-		var hub = document.createElementNS(SVG.namespace, 'circle');
-		hub.setAttribute('cx', '0');
-		hub.setAttribute('cy', '0');
-		hub.setAttribute('r', r);
-		hub.setAttribute('fill', '#ccc');
-		hub.setAttribute('opacity', '.5');
-		hub.setAttribute('stroke', 'none');
-		
-		var hubedge = document.createElementNS(SVG.namespace, 'circle');
-		hubedge.setAttribute('cx', '0');
-		hubedge.setAttribute('cy', '0');
-		hubedge.setAttribute('r', r);
-		hubedge.setAttribute('fill', 'none');
-		hubedge.setAttribute('stroke', '#aaa');
-		hubedge.setAttribute('stroke-width', 1);
-		hubedge.setAttribute('opacity', '1.0');
-		
-		var axel = document.createElementNS(SVG.namespace, 'circle');
-		axel.setAttribute('cx', '0');
-		axel.setAttribute('cy', '0');
-		axel.setAttribute('r', 4.5);
-		axel.setAttribute('fill', 'none');
-		axel.setAttribute('stroke', '#aaa');
-		axel.setAttribute('stroke-width', 1);
-		axel.setAttribute('opacity', '1.0');
-		
-		var g = document.createElementNS(SVG.namespace, 'g');
-		g.appendChild(hub);
-		g.appendChild(hubedge);
-		g.appendChild(axel);
-		return g;
-	},
-
-
-	//getRim
-	//	@param	erd	リムのERD
-	//	@param	thickness	リムの厚み
-	getRim : function(erd, thickness){
-		var r = erd / 2 + thickness / 2;
-		
-		var rim = document.createElementNS(SVG.namespace, 'circle');
-		rim.setAttribute('cx', '0');
-		rim.setAttribute('cy', '0');
-		rim.setAttribute('r', r);
-		rim.setAttribute('fill', 'none');
-		rim.setAttribute('stroke', '#ccc');
-		rim.setAttribute('stroke-width', thickness);
-		rim.setAttribute('opacity', '.5');
-		
-		var rimedge_inner = document.createElementNS(SVG.namespace, 'circle');
-		rimedge_inner.setAttribute('cx', '0');
-		rimedge_inner.setAttribute('cy', '0');
-		rimedge_inner.setAttribute('r', erd / 2);
-		rimedge_inner.setAttribute('fill', 'none');
-		rimedge_inner.setAttribute('stroke', '#aaa');
-		rimedge_inner.setAttribute('stroke-width', 1);
-		rimedge_inner.setAttribute('opacity', '1.0');
-		
-		var rimedge_outer = document.createElementNS(SVG.namespace, 'circle');
-		rimedge_outer.setAttribute('cx', '0');
-		rimedge_outer.setAttribute('cy', '0');
-		rimedge_outer.setAttribute('r', erd / 2 + thickness - 1);
-		rimedge_outer.setAttribute('fill', 'none');
-		rimedge_outer.setAttribute('stroke', '#aaa');
-		rimedge_outer.setAttribute('stroke-width', 1);
-		rimedge_outer.setAttribute('opacity', '1.0');
-		
-		var rimedge_center = document.createElementNS(SVG.namespace, 'circle');
-		rimedge_center.setAttribute('cx', '0');
-		rimedge_center.setAttribute('cy', '0');
-		rimedge_center.setAttribute('r', erd / 2 + thickness / 3);
-		rimedge_center.setAttribute('fill', 'none');
-		rimedge_center.setAttribute('stroke', '#aaa');
-		rimedge_center.setAttribute('stroke-width', 1);
-		rimedge_center.setAttribute('opacity', '1.0');
-
-		var g = document.createElementNS(SVG.namespace, 'g');
-		g.appendChild(rim);
-		g.appendChild(rimedge_inner);
-		g.appendChild(rimedge_outer);
-		g.appendChild(rimedge_center);
-		return g;
-	}
-
-};
-
-
-
-//onload
-Event.observe(window, "load", function(){
-	//form update events
-	var handler = ctrl.paramChanged.bind(ctrl);
-	Event.observe("erd", "change", handler);
-	Event.observe("pcd_l", "change", handler);
-	Event.observe("pcd_r", "change", handler);
-	Event.observe("fd_l", "change", handler);
-	Event.observe("fd_r", "change", handler);
-	Event.observe("sh", "change", handler);
-	Event.observe("rh", "change", handler);
-	Event.observe("hh", "change", handler);
-	Event.observe("sn_l", "change", handler);
-	Event.observe("sn_r", "change", handler);
-	Event.observe("c_l", "change", handler);
-	Event.observe("c_r", "change", handler);
-	Event.observe("rim_pitch_l", "change", handler);
-	Event.observe("rim_pitch_r", "change", handler);
-	Event.observe("hub_pitch_l", "change", handler);
-	Event.observe("hub_pitch_r", "change", handler);
-	
-	ctrl.paramChanged();
-});
-
-
-
-
-
-
-
-
-
-</script>
-
-
-</html>
-
